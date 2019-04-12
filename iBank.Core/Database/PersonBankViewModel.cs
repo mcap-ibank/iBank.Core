@@ -3,7 +3,7 @@
 using System;
 using System.ComponentModel;
 
-namespace iBank.Database
+namespace iBank.Core.Database
 {
     public class PersonBank : INotifyPropertyChanged
     {

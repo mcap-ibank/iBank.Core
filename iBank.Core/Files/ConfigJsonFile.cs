@@ -44,8 +44,8 @@ namespace iBank.Core.Files
         private string[] _Bank_Provider_Endpoints = new string[] { };
         public string[] Bank_Provider_Endpoints { get => _Bank_Provider_Endpoints; set => SetValueIfChangedAndSave(ref _Bank_Provider_Endpoints, value); }
 
-        private string _Bank_Provider_MS_Access_Provider = "Microsoft.ACE.OLEDB.15.0";
-        public string Bank_Provider_MS_Access_Provider { get => _Bank_Provider_MS_Access_Provider; set => SetValueIfChangedAndSave(ref _Bank_Provider_MS_Access_Provider, value); }
+        private string _Bank_Provider_MS_Access_Driver = "Driver={Microsoft Access Driver (*.mdb, *.accdb)}";
+        public string Bank_Provider_MS_Access_Driver { get => _Bank_Provider_MS_Access_Driver; set => SetValueIfChangedAndSave(ref _Bank_Provider_MS_Access_Driver, value); }
 
         private string _Bank_Provider_MS_Access_Mode = "Read";
         public string Bank_Provider_MS_Access_Mode { get => _Bank_Provider_MS_Access_Mode; set => SetValueIfChangedAndSave(ref _Bank_Provider_MS_Access_Mode, value); }
@@ -89,8 +89,8 @@ namespace iBank.Core.Files
 
             var builder = new DbConnectionStringBuilder
             {
-                { "Provider", Bank_Provider_MS_Access_Provider },
-                { "Data Source", $"{host}\\{Bank_Provider_MS_Access_File_Path}" },
+                { "Driver", Bank_Provider_MS_Access_Driver },
+                { "DBQ", $"{host}\\{Bank_Provider_MS_Access_File_Path}" },
                 { "Mode", _Bank_Provider_MS_Access_Mode },
             };
             return $"{builder.ConnectionString}; {SQL_ExtraArgs}";

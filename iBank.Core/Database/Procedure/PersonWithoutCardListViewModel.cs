@@ -1,10 +1,8 @@
-﻿using iBank.Core;
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 
-namespace iBank.Database
+namespace iBank.Core.Database
 {
     public class SearchPersonToAssignCard : INotifyPropertyChanged
     {

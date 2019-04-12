@@ -5,7 +5,7 @@ using iBank.Core.Data;
 using iBank.Core.Excel;
 using iBank.Core.Utils;
 
-namespace iBank.Database
+namespace iBank.Core.Database
 {
 
     public class Person : INotifyPropertyChanged, IPersonData, IPersonPassportData, IPersonCommentData

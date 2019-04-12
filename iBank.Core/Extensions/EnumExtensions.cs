@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace iBank.Extensions
+namespace iBank.Core.Extensions
 {
     public static class EnumExtensions
     {

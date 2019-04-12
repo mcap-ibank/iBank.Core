@@ -1,12 +1,11 @@
-﻿using iBank.Core;
-using iBank.Core.Utils;
+﻿using iBank.Core.Utils;
 
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 
-namespace iBank.Database
+namespace iBank.Core.Database
 {
     public class PersonAccountNumber : INotifyPropertyChanged, IPersonData, IPersonPassportData, IPersonCommentData, IPersonBankData
     {

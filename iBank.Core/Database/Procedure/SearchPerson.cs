@@ -1,5 +1,4 @@
-﻿using iBank.Core;
-using iBank.Core.Utils;
+﻿using iBank.Core.Utils;
 
 using System;
 using System.Collections.Generic;
@@ -7,7 +6,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Globalization;
 
-namespace iBank.Database
+namespace iBank.Core.Database
 {
     public class SearchPerson : INotifyPropertyChanged, IPersonData, IPersonPassportData, IPersonCommentData, IPersonBankData
     {

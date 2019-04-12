@@ -1,8 +1,6 @@
-﻿using iBank.Core;
+﻿using System.ComponentModel;
 
-using System.ComponentModel;
-
-namespace iBank.Database
+namespace iBank.Core.Database
 {
     public class PersonExtended : Person, INotifyPropertyChanged
     {

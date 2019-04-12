@@ -1,4 +1,4 @@
-﻿namespace iBank.Database
+﻿namespace iBank.Core.Database
 {
     public interface IPersonBankData
     {
