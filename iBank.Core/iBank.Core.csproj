@@ -13,7 +13,7 @@
     <PackageProjectUrl>https://github.com/mcap-ibank/iBank.Core</PackageProjectUrl>
     <RepositoryUrl>https://github.com/mcap-ibank/iBank.Core</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageIconUrl>https://github.com/mcap-ibank/iBank.Core/icon.ico</PackageIconUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/mcap-ibank/iBank.Core/master/iBank.Core/icon.ico</PackageIconUrl>
   </PropertyGroup>
 
   <ItemGroup>
