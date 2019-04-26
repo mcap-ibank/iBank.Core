@@ -4,12 +4,13 @@ using PCLExt.FileStorage;
 
 using System;
 using System.Data.Common;
+using System.Data.SqlClient;
 using System.Net;
-using System.Net.Sockets;
 
 namespace iBank.Core.Files
 {
-    public class ConfigJsonFile : JsonFile
+
+    public class ConfigJsonFile : BaseConfigJsonFile
     {
         #region Main SQL Database
 
@@ -36,7 +37,7 @@ namespace iBank.Core.Files
 
         #endregion
 
-        #region Bank MS Access Database
+        #region Bank Provider
 
         private string _Bank_Provider_MachineName = "UNKNOWN";
         public string Bank_Provider_MachineName { get => _Bank_Provider_MachineName; set => SetValueIfChangedAndSave(ref _Bank_Provider_MachineName, value); }
@@ -44,26 +45,20 @@ namespace iBank.Core.Files
         private string[] _Bank_Provider_Endpoints = new string[] { };
         public string[] Bank_Provider_Endpoints { get => _Bank_Provider_Endpoints; set => SetValueIfChangedAndSave(ref _Bank_Provider_Endpoints, value); }
 
-        private string _Bank_Provider_MS_Access_Driver = "Driver={Microsoft Access Driver (*.mdb, *.accdb)}";
-        public string Bank_Provider_MS_Access_Driver { get => _Bank_Provider_MS_Access_Driver; set => SetValueIfChangedAndSave(ref _Bank_Provider_MS_Access_Driver, value); }
-
-        private string _Bank_Provider_MS_Access_Mode = "Read";
-        public string Bank_Provider_MS_Access_Mode { get => _Bank_Provider_MS_Access_Mode; set => SetValueIfChangedAndSave(ref _Bank_Provider_MS_Access_Mode, value); }
-
-        private string _Bank_Provider_MS_Access_File_Path = "directory/file.accdb";
-        public string Bank_Provider_MS_Access_File_Path { get => _Bank_Provider_MS_Access_File_Path; set => SetValueIfChangedAndSave(ref _Bank_Provider_MS_Access_File_Path, value); }
+        private ushort _Bank_Provider_Port = 15565;
+        public ushort Bank_Provider_Port { get => _Bank_Provider_Port; set => SetValueIfChangedAndSave(ref _Bank_Provider_Port, value); }
 
         #endregion
 
-        public ConfigJsonFile() : base(new ConfigFolder().CreateFile("Config.json", CreationCollisionOption.OpenIfExists)) { }
+        public ConfigJsonFile() : base(new ConfigFolder().CreateFile("iBank.Config.json", CreationCollisionOption.OpenIfExists)) { }
 
         public string GetMainSQLConnectionString()
         {
-            string host = null;
+            string host = default;
             if (host == null && GetIPAddressByMachineName(SQL_MachineName) != null)
                 host = SQL_MachineName;
             if (host == null)
-                host = GetFirstValidIPAddress(SQL_Endpoints)?.ToString();
+                host = GetFirstValidIPAddress(SQL_Endpoints, SQL_Port)?.ToString();
             if (host == null)
                 throw new Exception("SQL Сервер недоступен!");
 
@@ -77,69 +72,19 @@ namespace iBank.Core.Files
             return $"{builder.ConnectionString}; {SQL_ExtraArgs}";
         }
 
-        public string GetBankProviderConnectionString()
+        public SqlConnection GetMainSqlConnection() => new SqlConnection(GetMainSQLConnectionString());
+
+        public BankProviderClient GetBankProviderClient()
         {
-            string host = null;
-            if (host == null && GetIPAddressByMachineName(Bank_Provider_MachineName) != null)
-                host = Bank_Provider_MachineName;
+            IPAddress host = default;
             if (host == null)
-                host = GetFirstValidIPAddress(Bank_Provider_Endpoints)?.ToString();
+                host = GetIPAddressByMachineName(Bank_Provider_MachineName);
             if (host == null)
-                throw new Exception("Не удалось найти файл!!");
+                host = GetFirstValidIPAddress(Bank_Provider_Endpoints, Bank_Provider_Port);
+            if (host == null)
+                throw new Exception("SQL Сервер недоступен!");
 
-            var builder = new DbConnectionStringBuilder
-            {
-                { "Driver", Bank_Provider_MS_Access_Driver },
-                { "DBQ", $"{host}\\{Bank_Provider_MS_Access_File_Path}" },
-                { "Mode", _Bank_Provider_MS_Access_Mode },
-            };
-            return $"{builder.ConnectionString}; {SQL_ExtraArgs}";
-        }
-
-        private IPAddress GetIPAddressByMachineName(string machineName)
-        {
-            try
-            {
-                var hostEntry = Dns.GetHostEntry(machineName);
-                return Array.Find(hostEntry.AddressList, ip => ip.AddressFamily == AddressFamily.InterNetwork);
-            }
-            catch(Exception ex) when(ex is SocketException)
-            {
-                return null;
-            }
-        }
-
-        private IPAddress GetFirstValidIPAddress(string[] endPoints)
-        {
-            foreach(var endpoint in endPoints)
-            {
-                if(IPAddress.TryParse(endpoint, out var ipAddress))
-                {
-                    try
-                    {
-                        var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp)
-                        {
-                            ReceiveTimeout = 500,
-                            SendTimeout = 500
-                        };
-                        var result = socket.BeginConnect(new IPEndPoint(ipAddress, SQL_Port), null, null);
-                        var success = result.AsyncWaitHandle.WaitOne(500, true);
-                        if (!success)
-                            socket.Close();
-                        else
-                        {
-                            socket.Close();
-                            return ipAddress;
-                        }
-                    }
-                    catch (Exception ex) when (ex is SocketException)
-                    {
-
-                    }
-                }
-            }
-
-            return null;
+            return new BankProviderClient(host, Bank_Provider_Port);
         }
     }
 }

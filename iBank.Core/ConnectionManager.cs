@@ -1,23 +1,21 @@
 ﻿using iBank.Core.Files;
 
-using System.Data.Odbc;
 using System.Data.SqlClient;
 
 namespace iBank.Core
 {
     public static class ConnectionManager
     {
-        public static string MSSQL_ConnectionString => new ConfigJsonFile().GetMainSQLConnectionString();
 
 #if KEEPSQLOPEN
-        public static SqlConnection Connection { get; set; } = new SqlConnection(new ConfigJsonFile().GetConnectionString());
+        public static SqlConnection Connection { get; set; } = new ConfigJsonFile().GetMainSqlConnection();
 
         static ConnectionManager()
         {
             // Нам не нужно держать соединение постоянно открытым, открытие\закрытие очнь быстрое
-            if (!ConnectionManager.Connection.TryOpen())
+            if (!Connection.TryOpen())
                 MessageBox.Show("Не удалось подключиться к БД!", "Ошибка!");
-            ConnectionManager.Connection.StateChange += Connection_StateChange;
+            Connection.StateChange += Connection_StateChange;
         }
 
         private void Connection_StateChange(object sender, System.Data.StateChangeEventArgs e)
@@ -25,7 +23,7 @@ namespace iBank.Core
             if (e.CurrentState == System.Data.ConnectionState.Closed)
             {
             reconnect:
-                if (!ConnectionManager.Connection.TryOpen())
+                if (!Connection.TryOpen())
                 {
                     switch(MessageBox.Show("Не удалось переподключиться к БД!", "Ошибка!", MessageBoxButton.YesNo))
                     {
@@ -36,10 +34,7 @@ namespace iBank.Core
             }
         }
 #else
-        public static SqlConnection MSSQL_Connection => new SqlConnection(MSSQL_ConnectionString);
+        public static SqlConnection MSSQL_Connection => new ConfigJsonFile().GetMainSqlConnection();
 #endif
-
-        public static string MSAccess_ConnectionString => new ConfigJsonFile().GetBankProviderConnectionString();
-        public static OdbcConnection MSAccess_Connection => new OdbcConnection(MSAccess_ConnectionString);
     }
 }

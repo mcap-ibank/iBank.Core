@@ -6,6 +6,7 @@ using PCLExt.FileStorage.Extensions;
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -40,6 +41,7 @@ namespace iBank.Core.Files
             Formatting = Formatting.Indented
         };
 
+        [DebuggerStepThrough]
         protected JsonFile(IFile file) : base(file)
         {
             Reload();

@@ -14,17 +14,19 @@
     <RepositoryUrl>https://github.com/mcap-ibank/iBank.Core</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageIconUrl>https://raw.githubusercontent.com/mcap-ibank/iBank.Core/master/iBank.Core/icon.ico</PackageIconUrl>
+    <Platform>AnyCPU</Platform>
+    <Configurations>Debug;Release</Configurations>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="EPPlus" Version="4.5.2.1" />
     <PackageReference Include="ExcelDataReader" Version="3.4.2" />
-    <PackageReference Include="Fody" Version="3.3.3">
+    <PackageReference Include="Fody" Version="5.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="PropertyChanged.Fody" Version="3.0.0" />
     <PackageReference Include="PCLExt.FileStorage" Version="1.4.1.1" />
-    <PackageReference Include="PropertyChanged.Fody" Version="2.6.0" />
     <PackageReference Include="System.Data.Odbc" Version="4.5.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.6.0" />
     <PackageReference Include="System.Runtime.InteropServices.RuntimeInformation" Version="4.3.0" />
