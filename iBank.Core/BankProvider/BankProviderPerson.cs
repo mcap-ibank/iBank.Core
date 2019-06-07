@@ -19,7 +19,7 @@ namespace iBank.Core.BankProvider
         public string FirstName { get; set; } = "";
         public string Patronymic { get; set; } = "";
         public string BirthDate { get; set; } = "";
-        public string PassportSerial { get; set; } = "";
+        public string DocumentSerialNumber { get; set; } = "";
         public string PassportIssue { get; set; } = "";
         public string PassportIssueDate { get; set; } = "";
         public string PassportDivisionCode { get; set; } = "";
@@ -48,7 +48,7 @@ namespace iBank.Core.BankProvider
             if (string.IsNullOrEmpty(pass0))
                 return;
             var pass1 = reader.GetString(10).Trim();
-            PassportSerial = $"{pass0.Insert(2, " ")} {pass1}".Trim();
+            DocumentSerialNumber = $"{pass0.Insert(2, " ")} {pass1}".Trim();
             //PassportSerial = reader.GetValue(1).ToString();
 
             PassportIssue = reader.GetValue(11).ToString().Trim();

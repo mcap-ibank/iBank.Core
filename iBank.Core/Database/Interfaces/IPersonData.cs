@@ -2,7 +2,7 @@
 {
     public interface IPersonData
     {
-        string PassportSerial { get; set; }
+        string DocumentSerialNumber { get; set; }
         string LastName { get; set; }
         string FirstName { get; set; }
         string Patronymic { get; set; }

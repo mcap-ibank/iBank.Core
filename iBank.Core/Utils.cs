@@ -6,7 +6,7 @@ namespace iBank.Core
     public static class Utils
     {
         public static bool FilterText(char @char) => char.IsControl(@char) || char.IsLetter(@char) || @char == ' ' || @char == '\'' || @char == '.' || @char == '-';
-        public static bool FilterPassport(char @char) => char.IsControl(@char) || char.IsDigit(@char) || @char == ' ';
+        public static bool FilterDocumentSerialNumber(char @char) => char.IsControl(@char) || char.IsLetter(@char) || char.IsDigit(@char) || @char == ' ';
         public static bool FilterCardNumber(char @char) => char.IsControl(@char) || char.IsDigit(@char) || @char == ' ';
 
         public static DateTime GetDateTime(string value)
@@ -20,14 +20,19 @@ namespace iBank.Core
             return DateTime.MinValue;
         }
 
-        public static bool PassportIsValid(DateTime birthday, DateTime passport, TimeSpan plusInterval = default)
+        public static bool PassportIsValid(string documentSerialNumber, DateTime birthday, DateTime passport, TimeSpan? plusInterval = null)
         {
-            if (Equals(birthday.Date, passport.Date))
-                return false;
+            if (documentSerialNumber.Length == 12 && documentSerialNumber[2] == ' ' && documentSerialNumber[5] == ' ')
+            {
+                if (Equals(birthday.Date, passport.Date))
+                    return false;
 
-            if (plusInterval == default)
-                plusInterval = TimeSpan.FromDays(7);
-            return !(birthday.AddYears(20) < DateTime.Now.Add(plusInterval) && birthday.AddYears(20) > passport);
+                if (plusInterval == null)
+                    plusInterval = TimeSpan.FromDays(7);
+                return !(birthday.AddYears(20) < DateTime.Now.Add(plusInterval.Value) && birthday.AddYears(20) > passport);
+            }
+            else
+                return true;
         }
     }
 }
